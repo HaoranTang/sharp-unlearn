@@ -1,0 +1,25 @@
+# Ignore all npz
+*.npz
+# Ignore wandb
+wandb/
+
+slurm_logs/*
+!slurm_logs/.gitkeep
+
+datasets/*
+!datasets/.gitkeep
+
+ckpts/*
+!ckpts/.gitkeep
+
+assets/*
+!assets/.gitkeep
+
+scripts/*
+!scripts/.gitkeep
+
+visualizations/*
+!visualizations/.gitkeep
+
+__pycache__/*
+__pycache__/
