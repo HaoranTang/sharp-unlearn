@@ -437,7 +437,7 @@ def main():
             lm_loader = replace_loader_dataset(lm_dataset, seed=seed, shuffle=True)
         else:
             if args.dataset == 'cifar10':
-                loaded_results = np.load('estimates_results_woShuffle.npz')
+                loaded_results = np.load('estimates_results.npz')
                 loaded_memorization = loaded_results['memorization']
             elif args.dataset == 'cifar100':
                 loaded_results = np.load('cifar100_infl_matrix.npz')

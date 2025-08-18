@@ -3,30 +3,43 @@ Official code base of the **[Sharpness-Aware Machine Unlearning](https://arxiv.o
 
 ## Installation
 
-1. **Clone the repo**  
+Clone the repo and install required packages inside a conda env with **python 3.10**:  
    ```bash
-   git clone https://github.com/kairanzhao/RUM.git
-   cd RUM
-   ```
-
-2. **Install dependencies**
-   ```bash
+   git clone https://github.com/HaoranTang/sharp-unlearn.git
+   cd sharp-unlearn
    pip install -r requirements.txt
    ```
 
 ## Getting Started
 
-### 1. **Train an Original Model**
+### 1. Pretraining
+
    ```bash
-      python main_train.py \
-      --dataset {DATASET} \
-      --arch {ARCHITECTURE} \
-      --epochs {NUM_EPOCHS} \
-      --lr {LEARNING_RATE} \
-      --batch_size {BATCH_SIZE}
+      python main_train.py --dataset {DATASET} --arch {ARCHITECTURE} \
+      --epochs {EPOCHS} --lr {LEARNING_RATE} --batch_size {BATCH_SIZE} \
+      --save_dir ckpts/original/ --data datasets
    ```
 
-### 2. **RUM Pipelines**
+To pretrain with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`.
+
+### 2. Retraining and Memorization Scores
+
+To evaluate unlearned models, we retrain with forget set removed and use the performance of retrained models as reference. On CIFAR-100 and ImageNet, we create forget sets based on memorization scores to evaluate performance under different unlearning difficulty. First download pre-computed memorization scores for CIFAR-100 and ImageNet from [Feldman et al.](https://pluskid.github.io/influence-memorization/) under project root. 
+
+For CIFAR-100, our code simply loads `cifar100_infl_matrix.npz`. For ImageNet, first process the downloaded `imagenet_index.npz` with `imagenet_mem_subset.py` to create forget set as `imagenet_filenames_indices_{num_indexes_to_replace}_{seed}.npz` before retraining or unlearning. *Optional*: [CIFAR-10 memorization scores](https://drive.google.com/file/d/1RCTrrI8jbCk6n1AWOtWJS3IubY-jtjRl/view) estimated and provided by [Zhao et al.](https://arxiv.org/abs/2406.01257).
+
+We then retrain with the following:
+
+```bash
+python main_forget.py --unlearn retrain --dataset {DATASET} --arch {ARCHITECTURE} \
+--epochs {EPOCHS} --lr {LEARNING_RATE} --batch_size {BATCH_SIZE} --data datasets \
+--unlearn_epochs {EPOCHS} --unlearn_lr {LEARNING_RATE} --mem 0 --num_indexes_to_replace 3000 
+--mask ckpts/original/your_pretrained_model
+```
+
+We use unlearning pipline to retrain since we need to process forget sets. Please set `--unlearn_epochs` and `--unlearn_lr` the same way as you pretrain. You may remove `--mem` to create random forget sets too (not implemented for ImageNet).
+
+### 3. Unlearning
 - **RUM**
 
    ```bash
