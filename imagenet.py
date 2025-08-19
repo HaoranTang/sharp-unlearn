@@ -19,10 +19,10 @@ def prepare_data(
     path = os.path.join(data_path, "huggingface")
     if dataset == "imagenet":
         train_set = load_dataset(
-            "/scratch/gautschi/thr/datasets/imagenet-unlearn/imagenet-1k.py", use_auth_token=True, split="train", cache_dir=path
+            "/path/to/your/imagenet/imagenet-1k.py", use_auth_token=True, split="train", cache_dir=path
         )
         validation_set = load_dataset(
-            "/scratch/gautschi/thr/datasets/imagenet-unlearn/imagenet-1k.py", use_auth_token=True, split="validation", cache_dir=path
+            "/path/to/your/imagenet/imagenet-1k.py", use_auth_token=True, split="validation", cache_dir=path
         )
 
         def train_transform(examples):

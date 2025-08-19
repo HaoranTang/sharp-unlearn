@@ -20,13 +20,21 @@ python main_train.py --dataset {DATASET} --arch {ARCHITECTURE} \
 --save_dir ckpts/original/ --data datasets
 ```
 
-To pretrain with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`.
+To pretrain with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`. For ImageNet, we first download and cache dataset from [HuggingFace](https://huggingface.co/datasets/ILSVRC/imagenet-1k), then we pass the annotation file of the downloaded dataset to `prepare_data()` in `imagenet.py`:
+```python
+train_set = load_dataset("/path/to/your/imagenet/imagenet-1k.py", use_auth_token=True, split="train", cache_dir={PATH_TO_CACHE})
+```
 
 ### 2. Retraining and Memorization Scores
 
 To evaluate unlearned models, we retrain with forget set removed and use the performance of retrained models as reference. On CIFAR-100 and ImageNet, we create forget sets based on memorization scores to evaluate performance under different unlearning difficulty. First download pre-computed memorization scores for CIFAR-100 and ImageNet from [Feldman et al.](https://pluskid.github.io/influence-memorization/) under project root. 
 
-For CIFAR-100, our code simply loads `cifar100_infl_matrix.npz`. For ImageNet, first process the downloaded `imagenet_index.npz` with `imagenet_mem_subset.py` to create forget set as `imagenet_filenames_indices_{num_indexes_to_replace}_{seed}.npz` before retraining or unlearning. *Optional*: [CIFAR-10 memorization scores](https://drive.google.com/file/d/1RCTrrI8jbCk6n1AWOtWJS3IubY-jtjRl/view) estimated and provided by [Zhao et al.](https://arxiv.org/abs/2406.01257).
+For CIFAR-100, our code simply loads `cifar100_infl_matrix.npz`. For ImageNet, first load dataset using our modified annotation file under project root to load filenames to match memorization scores:
+```python
+train_set = load_dataset("./imagenet-1k.py", use_auth_token=True, split="train", cache_dir={PATH_TO_CACHE})
+```
+
+Then process the downloaded `imagenet_index.npz` with `imagenet_mem_subset.py` to create forget set as `imagenet_filenames_indices_{num_indexes_to_replace}_{seed}.npz` before retraining or unlearning. *Optional*: [CIFAR-10 memorization scores](https://drive.google.com/file/d/1RCTrrI8jbCk6n1AWOtWJS3IubY-jtjRl/view) estimated and provided by [Zhao et al.](https://arxiv.org/abs/2406.01257).
 
 We then retrain with the following:
 ```bash
