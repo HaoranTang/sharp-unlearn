@@ -1,5 +1,5 @@
 # Sharpness-Aware Machine Unlearning
-Official code base of the **[Sharpness-Aware Machine Unlearning](https://arxiv.org/abs/2506.13715)**
+Official code base of **[Sharpness-Aware Machine Unlearning](https://arxiv.org/abs/2506.13715)**.
 
 ## Installation
 
@@ -15,9 +15,9 @@ Clone this repository and install required packages inside a Conda environment w
 ### 1. Pretraining
 
 ```bash
-    python main_train.py --dataset {DATASET} --arch {ARCHITECTURE} \
-    --epochs {EPOCHS} --lr {LEARNING_RATE} --batch_size {BATCH_SIZE} \
-    --save_dir ckpts/original/ --data datasets
+python main_train.py --dataset {DATASET} --arch {ARCHITECTURE} \
+--epochs {EPOCHS} --lr {LEARNING_RATE} --batch_size {BATCH_SIZE} \
+--save_dir ckpts/original/ --data datasets
 ```
 
 To pretrain with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`.
@@ -50,7 +50,7 @@ python main_forget.py --unlearn {METHOD} --num_indexes_to_replace {FORGET_SIZE} 
 
 To unlearn with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`. SAM-Supported unlearning methods are summarized in the below table:
 |    Method |    `--unlearn`    | Additional Hyperparameters                                         |
-| --------: | :--------: | :--------------------------------------------------------------- |
+| -------------: | :----------: | :--------------------------------------------------------- |
 | Fine-Tune |    `FT`    | —                                                                |
 | L1-Sparse | `FT_prune` | `--alpha {ALPHA}`                                                |
 | Gradient Ascent |    `GA`    | —                                                                |
@@ -61,7 +61,7 @@ To unlearn with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --la
 
 **Generate Weight Masking**
 
-For SalUn and Sharp MinMax, we need to first generate a weight mask to divide model parameters for retaining and forgetting. Pass your arguments like unlearning:
+For SalUn and Sharp MinMax, we need to first generate a weight mask to divide model parameters for retaining and forgetting before unlearning. Pass your arguments like unlearning:
 ```bash
 python generate_mask.py --unlearn {METHOD} --num_indexes_to_replace {FORGET_SIZE} \
 --mem {0,2,4} --unlearn_lr {UNLEARN_LR} --unlearn_epochs {UNLEARN_EPOCHS} \
@@ -73,7 +73,7 @@ python generate_mask.py --unlearn {METHOD} --num_indexes_to_replace {FORGET_SIZE
 
 This will pass your forget set to the model and select parameters most important to your forget set. Configure `threshold_list` at Line 74 to pass the percentile(s) (e.g., threshold_list = [0.1]` masks 10\% of model parameters as important to the forget set and create a mask). Again, remove `--mem` for random forget sets too. Make sure you have the same `--seed` to reproduce the same forget sets.
 
-**Sharp MinMax**
+#### 3.1. Sharp MinMax
 
 We implement Sharp MinMax based on NegGrad with additional weight mask. To unlearn with Sharp MinMax, run:
 ```bash
@@ -104,4 +104,4 @@ If you find this work useful, please consider citing our paper, thank you!
 ```
 
 ## References
-We have used code mainly from [RUM](https://github.com/kairanzhao/RUM), [SalUn] (https://github.com/OPTML-Group/Unlearn-Saliency), and [PyTorch SAM](https://github.com/davda54/sam). We also implemet additional modules based on [Heldout Influence Estimation] (https://github.com/google-research/heldout-influence-estimation) and [Data Metrics] (https://github.com/meghdadk/data-metrics), and we have used pre-computed memorization scores from [Feldman et al.](https://pluskid.github.io/influence-memorization/).
+We have used code mainly from [RUM](https://github.com/kairanzhao/RUM), [SalUn](https://github.com/OPTML-Group/Unlearn-Saliency), and [PyTorch SAM](https://github.com/davda54/sam). We also implemet additional modules based on [Heldout Influence Estimation](https://github.com/google-research/heldout-influence-estimation) and [Data Metrics](https://github.com/meghdadk/data-metrics), and we have used pre-computed memorization scores from [Feldman et al.](https://pluskid.github.io/influence-memorization/).
