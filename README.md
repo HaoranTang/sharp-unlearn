@@ -50,7 +50,7 @@ python main_forget.py --unlearn {METHOD} --num_indexes_to_replace {FORGET_SIZE} 
 
 To unlearn with SAM, pass SAM-specific arguments, e.g. `--sam min --rho 1.0 --lamb 1 --adaptive`. SAM-Supported unlearning methods are summarized in the below table:
 |    Method |    `--unlearn`    | Additional Hyperparameters                                         |
-| -------------: | :----------: | :--------------------------------------------------------- |
+| -----------------: | :--------------: | :------------------------------------------------- |
 | Fine-Tune |    `FT`    | —                                                                |
 | L1-Sparse | `FT_prune` | `--alpha {ALPHA}`                                                |
 | Gradient Ascent |    `GA`    | —                                                                |
@@ -71,7 +71,7 @@ python generate_mask.py --unlearn {METHOD} --num_indexes_to_replace {FORGET_SIZE
 --save_dir {MASK_PATH}
 ```
 
-This will pass your forget set to the model and select parameters most important to your forget set. Configure `threshold_list` at Line 74 to pass the percentile(s) (e.g., threshold_list = [0.1]` masks 10\% of model parameters as important to the forget set and create a mask). Again, remove `--mem` for random forget sets too. Make sure you have the same `--seed` to reproduce the same forget sets.
+This will pass your forget set to the model and select parameters most important to your forget set. Configure `threshold_list` at Line 74 to pass the percentile(s) (e.g., `threshold_list = [0.1]` masks 10\% of model parameters as important to the forget set and create a mask). Again, remove `--mem` for random forget sets too. Make sure you have the same `--seed` to reproduce the same forget sets.
 
 #### 3.1. Sharp MinMax
 
