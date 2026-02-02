@@ -1,4 +1,4 @@
-# Sharpness-Aware Machine Unlearning
+# [ICLR 2026] Sharpness-Aware Machine Unlearning
 Official code base of **[Sharpness-Aware Machine Unlearning](https://arxiv.org/abs/2506.13715)**.
 
 ## Installation
